@@ -62,6 +62,9 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'onsails/lspkind-nvim'
+Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
+ " Plug 'ryanoasis/vim-devicons' Icons without colours
+Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 " ------------------------
 " 主题安装
 " ------------------------
