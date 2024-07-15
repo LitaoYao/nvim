@@ -32,13 +32,13 @@ Plug 'iamcco/mathjax-support-for-mkdp'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'voldikss/vim-floaterm'
 if has('nvim')
-	Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-	" Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+    Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+    " Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 else
-	Plug 'Shougo/defx.nvim'
-	" Plug 'Shougo/deoplete.nvim'
-	Plug 'roxma/nvim-yarp'
-	Plug 'roxma/vim-hug-neovim-rpc'
+    Plug 'Shougo/defx.nvim'
+    " Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
 endif
 Plug 'kristijanhusak/defx-icons'
 " Plug 'liuchengxu/vista.vim'
@@ -47,14 +47,13 @@ Plug 'vim-scripts/wimproved.vim'
 Plug 'puremourning/vimspector'
 Plug 'voldikss/vim-translator'
 Plug 'mhinz/vim-startify'
-Plug 'OmniSharp/omnisharp-vim'
+" Plug 'OmniSharp/omnisharp-vim'
 " Plug 'skywind3000/vim-auto-popmenu'
 " Plug 'skywind3000/vim-dict'
 " Plug 'yegappan/lsp'
 Plug 'petertriho/nvim-scrollbar'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -285,7 +284,7 @@ set completeopt-=preview
 " ------------------------
 " Python
 
-let g:python3_host_prog = 'C:\Users\bobyao\AppData\Local\Programs\Python\Python311\python.exe'
+let g:python3_host_prog = 'C:\Users\bobyao\AppData\Local\Programs\Python\Python312\python.exe'
 
 func Compile() 
 	exec "silent w"
@@ -310,48 +309,23 @@ endfunc
 func RunDebug() 
 	let ext = expand("%:e")
 	if ext == "cpp"
-		exec "!start gdb %:r"
+		exec "!start lldb %:r"
 	endif
 	if ext == "c"
-		exec "!start gdb %:r"
+		exec "!start lldb %:r"
 	endif
 	if ext == "java"
-		exec "! start /B /D\"%:p:h\" java %:r"
+		exec "!start /B /D\"%:p:h\" java %:r"
 	endif
 endfunc
 
 func RunProg()
 	if (findfile("input") == "")
-		silent exec "!start %:r > %:p:h/output"
+		silent exec "!%:r > %:p:h/output"
 	else
 		silent exec "!%:r %:p:h/input > %:p:h/output"
-		exec "e %:p:h/output"
 	endif
-endfunc
-
-func ZOJSymbol()
-	exec '%s/&/\&amp;/g'
-	exec '%s/>=/\&ge;/g'
-	exec '%s/<=/\&le;/g'
-	exec '%s/</\&lt;/g'
-	exec '%s/>/\&gt;/g'
-endfunc
-
-func ZOJParam(x)
-	let x = "%s#\\<" . a:x . "\\>#<i>" . a:x . "</i>#g"
-	exec x
-endfunc
-
-func CleanVerilog()
-	exec ':%s/<=/ <= /g'
-	exec ':%s/>=/ >= /g'
-	exec ':%s/==/ == /g'
-	exec ':%s/!=/ != /g'
-	exec ':%s/\([^=<>!]\)=\([^=<>!]\)/\1 = \2/g'
-	exec ':%s/,/, /g'
-	exec ':%s/\s\+/ /g'
-	exec ':%s/\s\+$//g'
-	exec ':%s/^\s\+//g'
+    exec "e %:p:h/output"
 endfunc
 
 " ------------------------
@@ -773,12 +747,12 @@ let g:startify_custom_header =
 nnoremap <leader>s :Startify<CR>
 " }
 
-" Plugin: OmniSharp{
-let g:OmniSharp_server_path = 'C:\Program Files\Omnisharp\OmniSharp.exe'
-let g:OmniSharp_popup_position = 'center'
-let g:OmniSharp_popup = 1
-let g:OmniSharp_highlighting = 0
-" }
+" " Plugin: OmniSharp{
+" let g:OmniSharp_server_path = 'C:\Program Files\OmniSharp\OmniSharp.exe'
+" let g:OmniSharp_popup_position = 'center'
+" let g:OmniSharp_popup = 1
+" let g:OmniSharp_highlighting = 0
+" " }
 
 " Plugin: vim-auto-popmenu{
 " enable this plugin for filetypes, '*' for all files.
