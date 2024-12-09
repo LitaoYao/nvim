@@ -20,7 +20,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'ervandew/supertab'
 "Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'preservim/nerdcommenter'
-Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+" Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'dyng/ctrlsf.vim'
 " Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
@@ -61,15 +61,28 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'onsails/lspkind-nvim'
-Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
- " Plug 'ryanoasis/vim-devicons' Icons without colours
-Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
+Plug 'nvim-lua/plenary.nvim'
 " ------------------------
 " 主题安装
-" ------------------------
 Plug 'folke/tokyonight.nvim'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 Plug 'projekt0n/github-nvim-theme'
+" ------------------------
+" ------------------------
+" TypeScript
+Plug 'pmizio/typescript-tools.nvim'
+" ------------------------
+" ------------------------
+" C#
+Plug 'seblj/roslyn.nvim'
+" ------------------------
+Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
+ " Plug 'ryanoasis/vim-devicons' Icons without colours
+Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
+Plug 'windwp/nvim-autopairs'
+Plug 'rmagatti/goto-preview'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+Plug 'ray-x/lsp_signature.nvim'
 call plug#end()
 
 if $TERM == 'screen'
@@ -86,11 +99,11 @@ set nocp
 " ------------------------
 set encoding=utf-8
 set termencoding=utf-8
-"set langmenu=zh_CN.UTF-8
-set langmenu=en_US.utf8
-let $LANG='en_US'
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
+" set langmenu=zh_CN.UTF-8
+" set langmenu=en_US.UTF-8
+" language "en_CN"
+" source $VIMRUNTIME/delmenu.vim
+" source $VIMRUNTIME/menu.vim
 
 if has("multi_byte")
 	" if &termencoding == ""
@@ -101,7 +114,7 @@ if has("multi_byte")
 	" Note, this will not apply to the first, empty
 	" buffer created at Vim startup.
 	setglobal bomb
-	set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+	set fileencodings=ucs-bom,utf-8,gb2312,cp936,gbk,gb18030,big5,euc-jp,euc-kr,latin1
 endif
 
 " ------------------------
@@ -133,18 +146,6 @@ else
 	set wrap
 endif
 
-" 自动全屏
-" if has('win32')
-" 	au GUIEnter * simalt ~x
-" else
-" 	au GUIEnter * call MaximizeWindow()
-" endif
-
-
-function! MaximizeWindow()
-	silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
-endfunction
-
 " 文件类型识别
 " filetype plugin indent off
 " 开启语法加亮
@@ -156,7 +157,7 @@ set synmaxcol=512
 syntax sync minlines=256
 
 " 设置字体
-set guifont=CodeNewRoman\ Nerd\ Font:h14:cANSI
+set guifont=CodeNewRoman\ Nerd\ Font:h12:cANSI
 
 " 显示行号
 set number
@@ -168,10 +169,6 @@ set vb
 colorscheme tokyonight-moon
 " colorscheme catppuccin_frappe
 set background=dark
-" 使用neovide的滚动动画
-let g:neovide_scroll_animation_far_lines = 1
-" 全屏
-let g:neovide_fullscreen = v:true
 
 " ------------------------
 "   格式相关设置
@@ -474,15 +471,25 @@ let g:ale_set_highlights = 0
 let g:ale_lint_on_text_changed = 'never'
 " 打开文件时不进行检查
 let g:ale_lint_on_enter = 0
+" 保存时检查
+let g:ale_lint_on_save = 1
 " 设置图标
 let g:ale_sign_error = '✗' "❌
 let g:ale_sign_warning = '⚡'
 " 默认linters
-" , 'mypy', 'pylint']
 let g:ale_linters = {
-	\ 'python': ['flake8'],
-	\ 'cpp': ['gcc'],
-	\ 'c': ['gcc'],
+    \ 'python': ['flake8'],
+    \ 'cpp': ['gcc'],
+    \ 'c': ['gcc'],
+    \ 'typescript': ['eslint'],
+    \ 'javascript': ['eslint'],
+\}
+let g:ale_fixers = {
+    \ 'python': ['flake8'],
+    \ 'cpp': ['gcc'],
+    \ 'c': ['gcc'],
+    \ 'typescript': ['eslint'],
+    \ 'javascript': ['eslint'],
 \}
 " }
 
@@ -499,36 +506,36 @@ set tags=.tags;
 set autochdir
 " }
 
-" Plugin: Leaderf {
-nnoremap <leader>p :LeaderfFunction<CR>
-nnoremap <leader>o :LeaderfBufTag<CR>
-nnoremap <leader>l :LeaderfLine<CR>
-let g:Lf_WildIgnore = {
-    \ 'dir': ['.svn','.git','.hg', 'Temp'],
-    \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[con]','*.bin', '*.dll', '*.pdb',
-    \		'*.jpg','*.png','*.csb','*.dds','*.tga','*.ktx','*.astc','*.pvr', '*.bc7',
-    \		'*.scn[_flag_32]','*.chunk*','*.area',
-    \		'*.ags','*.gim','*.gis','*.mesh','*.mtg','*.sfx',
-    \		'*.doc[x]', '*.xls[x]', '*.ppt[x]',
-    \		'*.meta',]
-    \}
-let g:Lf_WindowPosition = 'popup'
-let g:Lf_RootMarkers = ['.vimroot', '.svn', '.git', '.hg']
-let g:Lf_WorkingDirectoryMode = 'ac'
-" let g:Lf_StlColorscheme = 'default'
-" let g:Lf_PopupColorscheme = 'default'
-" let g:Lf_StlColorscheme = 'powerline'
-" let g:Lf_PopupColorscheme = 'powerline'
-let g:Lf_StlColorscheme = 'gruvbox_material'
-let g:Lf_PopupColorscheme = 'gruvbox_default'
-let g:Lf_StlSeparator = { 'left': '', 'right': '' }
-let g:Lf_StlSeparator = { 'left': '', 'right': '' }
-let g:Lf_PreviewCode = 1
-let g:Lf_PreviewInPopup = 1
-let g:Lf_ShowRelativePath = 0
-let g:Lf_PopupWidth = 0.75
-let g:Lf_PopupHeight = 0.5
-" }
+" " Plugin: Leaderf {
+" nnoremap <leader>p :LeaderfFunction<CR>
+" nnoremap <leader>o :LeaderfBufTag<CR>
+" nnoremap <leader>l :LeaderfLine<CR>
+" let g:Lf_WildIgnore = {
+"     \ 'dir': ['.svn','.git','.hg', 'Temp'],
+"     \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[con]','*.bin', '*.dll', '*.pdb',
+"     \		'*.jpg','*.png','*.csb','*.dds','*.tga','*.ktx','*.astc','*.pvr', '*.bc7',
+"     \		'*.scn[_flag_32]','*.chunk*','*.area',
+"     \		'*.ags','*.gim','*.gis','*.mesh','*.mtg','*.sfx',
+"     \		'*.doc[x]', '*.xls[x]', '*.ppt[x]',
+"     \		'*.meta',]
+"     \}
+" let g:Lf_WindowPosition = 'popup'
+" let g:Lf_RootMarkers = ['.vimroot', '.svn', '.git', '.hg', 'TsScripts.code-workspace']
+" let g:Lf_WorkingDirectoryMode = 'ac'
+" " let g:Lf_StlColorscheme = 'default'
+" " let g:Lf_PopupColorscheme = 'default'
+" " let g:Lf_StlColorscheme = 'powerline'
+" " let g:Lf_PopupColorscheme = 'powerline'
+" let g:Lf_StlColorscheme = 'gruvbox_material'
+" let g:Lf_PopupColorscheme = 'gruvbox_default'
+" let g:Lf_StlSeparator = { 'left': '', 'right': '' }
+" let g:Lf_StlSeparator = { 'left': '', 'right': '' }
+" let g:Lf_PreviewCode = 1
+" let g:Lf_PreviewInPopup = 1
+" let g:Lf_ShowRelativePath = 0
+" let g:Lf_PopupWidth = 0.75
+" let g:Lf_PopupHeight = 0.5
+" " }
 
 " Plugin: CtrlSF {
 nnoremap <C-S-f> :CtrlSF<Space>
@@ -613,9 +620,10 @@ let g:floaterm_height=0.9
 " }
 
 " Plugin: defx {
-nnoremap <leader>d :Defx -columns=icons:indent:filename:type<CR>
-nnoremap <leader>e :Defx `expand('%:p:h')` -columns=icons:indent:filename:type<CR>
+nnoremap <leader>d :Defx <CR>
+nnoremap <leader>e :Defx `expand('%:p:h')`<CR>
 autocmd FileType defx call s:defx_my_settings()
+
 function! s:defx_my_settings() abort
 	set nonumber
 	" Define mappings
@@ -687,10 +695,11 @@ function! s:defx_my_settings() abort
 endfunction
 
 call defx#custom#option('_', {
-	\ 'winwidth': 30,
+	\ 'winwidth': 50,
 	\ 'split': 'vertical',
 	\ 'direction': 'topleft',
-	\ 'show_ignored_files': 0,
+	\ 'show_ignored_files': 1,
+	\ 'columns': 'icons:indent:filename:type',
 	\ 'buffer_name': '',
 	\ 'root_marker': '≡',
 	\ 'toggle': 1,
