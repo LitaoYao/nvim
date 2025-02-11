@@ -38,6 +38,18 @@ lsp_signature.setup({
         border = "rounded"
     }
 })
+vim.keymap.set(
+    "n",
+    "<leader>1",
+    function()
+        lsp_signature.toggle_float_win()
+    end,
+    {
+        silent = true,
+        noremap = true,
+        desc = 'toggle signature'
+    }
+)
 
 -- mason
 local mason = require("mason")
