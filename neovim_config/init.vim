@@ -42,7 +42,7 @@ else
 endif
 Plug 'kristijanhusak/defx-icons'
 " Plug 'liuchengxu/vista.vim'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 " Plug 'vim-scripts/wimproved.vim'
 Plug 'puremourning/vimspector'
 Plug 'voldikss/vim-translator'
@@ -85,6 +85,15 @@ Plug 'rmagatti/goto-preview'
 Plug 'nvim-telescope/telescope.nvim'", { 'branch': '0.1.x' }
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" ------------------------
+"  DAP
+Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'jay-babu/mason-nvim-dap.nvim'
+" Plug 'mxsdev/nvim-dap-vscode-js'
+" Plug 'microsoft/vscode-js-debug', {'do': 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out'}
+" ------------------------
 call plug#end()
 
 if $TERM == 'screen'
@@ -151,12 +160,12 @@ endif
 " 文件类型识别
 " filetype plugin indent off
 " 开启语法加亮
-syntax on
-syntax enable
-set re=1
-set lazyredraw
-set synmaxcol=512
-syntax sync minlines=256
+" syntax on
+" syntax enable
+" set re=1
+" set lazyredraw
+" set synmaxcol=512
+" syntax sync minlines=256
 
 " 设置字体
 set guifont=CodeNewRoman\ Nerd\ Font:h12:cANSI
@@ -386,6 +395,7 @@ imap <C-k> <C-r>:bn<CR>
 
 lua require('plugins')
 lua require('lsp')
+lua require('dap_config')
 
 " " Plugin: NERDTree {
 " let NERDTreeWinPos = "left"
