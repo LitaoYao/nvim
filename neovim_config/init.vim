@@ -393,6 +393,11 @@ imap <C-j> <C-r>:bp<CR>
 nmap <C-k> :bn<CR>
 imap <C-k> <C-r>:bn<CR>
 
+" -----------------------
+"  Shared Data设置
+set shada= 
+" -----------------------
+
 lua require('plugins')
 lua require('lsp')
 lua require('dap_config')
