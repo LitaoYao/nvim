@@ -1,10 +1,10 @@
 -- scrollbar
-require("scrollbar").setup()
+require('scrollbar').setup()
 
 -- -- nvim-tree
--- local nvim_tree = require("nvim-tree")
+-- local nvim_tree = require('nvim-tree')
 -- nvim_tree.setup({
---     sort_by = "case_sensitive",
+--     sort_by = 'case_sensitive',
 --     -- 是否显示 git 状态
 --     git = {
 --         enable = true,
@@ -12,36 +12,36 @@ require("scrollbar").setup()
 --     -- 过滤文件
 --     filters = {
 --         dotfiles = true, -- 过滤 dotfile
---         custom = { "node_modules" }, -- 其他过滤目录
+--         custom = { 'node_modules' }, -- 其他过滤目录
 --     },
 --     view = {
 --         -- 文件浏览器展示位置，左侧：left, 右侧：right
---         side = "left",
+--         side = 'left',
 --         -- 行号是否显示
 --         number = false,
 --         relativenumber = false,
---         signcolumn = "yes", -- 显示图标
+--         signcolumn = 'yes', -- 显示图标
 --         width = 30,
 --     },
 --     renderer = {
 --         group_empty = true,
 --     },
 -- })
--- vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = 'Open Nvim Tree' })
+-- vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Open Nvim Tree' })
 
 -- bufferline
 vim.opt.termguicolors = true
 local bufferline = require('bufferline')
 bufferline.setup({
     options = {
-        mode = "buffers", -- set to "tabs" to only show tabpages instead
+        mode = 'buffers', -- set to 'tabs' to only show tabpages instead
         style_preset = bufferline.style_preset.default, -- or bufferline.style_preset.minimal,
         themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
-        numbers = "none",
-        close_command = "bdelete! %d",       -- can be a string | function, | false see "Mouse actions"
-        right_mouse_command = "bdelete! %d", -- can be a string | function | false, see "Mouse actions"
-        left_mouse_command = "buffer %d",    -- can be a string | function, | false see "Mouse actions"
-        middle_mouse_command = nil,          -- can be a string | function, | false see "Mouse actions"
+        numbers = 'none',
+        close_command = 'bdelete! %d',       -- can be a string | function, | false see 'Mouse actions'
+        right_mouse_command = 'bdelete! %d', -- can be a string | function | false, see 'Mouse actions'
+        left_mouse_command = 'buffer %d',    -- can be a string | function, | false see 'Mouse actions'
+        middle_mouse_command = nil,          -- can be a string | function, | false see 'Mouse actions'
         indicator = {
             icon = '▎', -- this should be omitted if indicator style is not 'icon'
             style = 'icon',
@@ -60,35 +60,35 @@ bufferline.setup({
             -- path                | str        | the full path of the active file
             -- bufnr (buffer only) | int        | the number of the active buffer
             -- buffers (tabs only) | table(int) | the numbers of the buffers in the tab
-            -- tabnr (tabs only)   | int        | the "handle" of the tab, can be converted to its ordinal number using: `vim.api.nvim_tabpage_get_number(buf.tabnr)`
+            -- tabnr (tabs only)   | int        | the 'handle' of the tab, can be converted to its ordinal number using: `vim.api.nvim_tabpage_get_number(buf.tabnr)`
         end,
         max_name_length = 64,
         max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
         truncate_names = true, -- whether or not tab names should be truncated
         tab_size = 20,
-        diagnostics = "nvim_lsp",
+        diagnostics = 'nvim_lsp',
         diagnostics_update_in_insert = false,
         -- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
         diagnostics_indicator = function(count, level, diagnostics_dict, context)
             if context.buffer:current() then
                 return ''
             end
-            local icon = level:match("error") and " " or ""
-            return " " .. icon .. count
+            local icon = level:match('error') and ' ' or ''
+            return ' ' .. icon .. count
         end,
         -- NOTE: this will be called a lot so don't do any heavy processing here
         custom_filter = function(buf_number, buf_numbers)
             -- filter out filetypes you don't want to see
-            if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
+            if vim.bo[buf_number].filetype ~= '<i-dont-want-to-see-this>' then
                 return true
             end
             -- filter out by buffer name
-            if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
+            if vim.fn.bufname(buf_number) ~= '<buffer-name-I-dont-want>' then
                 return true
             end
             -- filter out based on arbitrary rules
             -- e.g. filter out vim wiki buffer from tabline in your work repo
-            if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
+            if vim.fn.getcwd() == '<work-repo>' and vim.bo[buf_number].filetype ~= 'wiki' then
                 return true
             end
             -- filter out by it's index number in list (don't show first buffer)
@@ -98,10 +98,10 @@ bufferline.setup({
         end,
         offsets = {
             {
-                filetype = "defx",
-                text = "File Explorer",
-                highlight = "Directory",
-                text_align = "left"
+                filetype = 'defx',
+                text = 'File Explorer',
+                highlight = 'Directory',
+                text_align = 'left'
             }
         },
         color_icons = true, -- whether or not to add the filetype icon highlights
@@ -120,10 +120,10 @@ bufferline.setup({
         show_duplicate_prefix = true, -- whether to show duplicate buffer prefix
         duplicates_across_groups = true, -- whether to consider duplicate paths in different groups as duplicates
         persist_buffer_sort = false, -- whether or not custom sorted buffers should persist
-        move_wraps_at_ends = false, -- whether or not the move command "wraps" at the first or last position
+        move_wraps_at_ends = false, -- whether or not the move command 'wraps' at the first or last position
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
-        separator_style = "slant",
+        separator_style = 'slant',
         enforce_regular_tabs = false,
         always_show_bufferline = true,
         auto_toggle_bufferline = true,
@@ -141,11 +141,11 @@ bufferline.setup({
 
 -- Telescope
 local function normalize_path(path)
-    return path:gsub("\\", "/")
+    return path:gsub('\\', '/')
 end
 
 local function normalize_cwd()
-    return normalize_path(vim.loop.cwd()) .. "/"
+    return normalize_path(vim.loop.cwd()) .. '/'
 end
 
 local function is_subdirectory(cwd, path)
@@ -155,7 +155,7 @@ end
 local function split_filepath(path)
     local normalized_path = normalize_path(path)
     local normalized_cwd = normalize_cwd()
-    local filename = normalized_path:match("[^/]+$")
+    local filename = normalized_path:match('[^/]+$')
 
     if is_subdirectory(normalized_cwd, normalized_path) then
         local stripped_path = normalized_path:sub(#normalized_cwd + 1, -(#filename + 1))
@@ -168,33 +168,33 @@ end
 
 local function path_display(_, path)
     local stripped_path, filename = split_filepath(path)
-    if filename == stripped_path or stripped_path == "" then
+    if filename == stripped_path or stripped_path == '' then
         return filename
     end
-    return string.format("%s ~ %s", filename, stripped_path)
+    return string.format('%s ~ %s', filename, stripped_path)
 end
 
 local builtin = require('telescope.builtin')
 local actions = require('telescope.actions')
 local telescope = require('telescope').setup({
     defaults = {
-        initial_mode = "insert",
+        initial_mode = 'insert',
         path_display = {
             filename_first = {
                 reverse_directories = false,
             },
         },
-        layout_strategy = "vertical",
+        layout_strategy = 'vertical',
         layout_config = {
             height = 0.95,
             width = 0.95,
         },
         mappings = {
             i = {
-                ["<c-d>"] = actions.delete_buffer,
+                ['<c-d>'] = actions.delete_buffer,
             },
             n = {
-                ["dd"] = actions.delete_buffer,
+                ['dd'] = actions.delete_buffer,
             }
         }
     }
@@ -214,8 +214,8 @@ goto_preview.setup({
 
 -- nvim-treesitter
 require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-  ensure_installed = { "c", "cpp", "c_sharp", "typescript", "python", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
+  -- A list of parser names, or 'all' (the listed parsers MUST always be installed)
+  ensure_installed = { 'c', 'cpp', 'c_sharp', 'typescript', 'python', 'lua', 'vim', 'vimdoc', 'query', 'markdown', 'markdown_inline', 'bash', 'hlsl'},
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -224,11 +224,11 @@ require'nvim-treesitter.configs'.setup {
   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
   auto_install = true,
 
-  -- List of parsers to ignore installing (or "all")
-  ignore_install = { "javascript" },
+  -- List of parsers to ignore installing (or 'all')
+  ignore_install = { 'javascript' },
 
   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+  -- parser_install_dir = '/some/path/to/store/parsers', -- Remember to run vim.opt.runtimepath:append('/some/path/to/store/parsers')!
 
   highlight = {
     enable = true,
@@ -237,7 +237,7 @@ require'nvim-treesitter.configs'.setup {
     -- -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- -- the name of the parser)
     -- -- list of language that will be disabled
-    -- disable = { "c", "rust" },
+    -- disable = { 'c', 'rust' },
     -- -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
     --     local max_filesize = 100 * 1024 -- 100 KB
