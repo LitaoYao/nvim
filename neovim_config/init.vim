@@ -104,6 +104,7 @@ endif
 " ------------------------
 " vi 不兼容模式
 set nocp
+set updatetime=500
 
 " ------------------------
 "   编码相关
@@ -246,8 +247,9 @@ set keymodel=startsel,stopsel
 set selection=exclusive
 " 查找时不区分大小写
 set ignorecase
-" 高亮光标所在列
-set cursorcolumn
+" 不高亮光标所在列
+set nocursorcolumn
+" 高亮光标所在行
 set cursorline
 " 智能 Home 键
 function SmartHome()
@@ -395,8 +397,8 @@ imap <C-k> <C-r>:bn<CR>
 
 " -----------------------
 "  Shared Data设置
-set shada= 
 " -----------------------
+set shada='20,<50,s10
 
 lua require('plugins')
 lua require('lsp')
