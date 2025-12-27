@@ -13,7 +13,6 @@ return {
         build = 'make'
     },
     { 'ray-x/lsp_signature.nvim' },
-    { 'rmagatti/goto-preview' },
     { 'beyondmarc/hlsl.vim' },
     { 'pmizio/typescript-tools.nvim' },
     { 'iabdelkareem/csharp.nvim' },

@@ -37,13 +37,19 @@ return {
                     globalstatus = false,
                 },
                 sections = {
-                    lualine_a = { { 'mode', separator = { left = '' }, right_padding = 2 } },
+                    lualine_a = {
+                        { 'mode', separator = { left = '' }, right_padding = 2 }
+                    },
                     lualine_b = { 'filename', 'branch' },
                     lualine_c = {
                         '%=', --[[ add your center compoentnts here in place of this comment ]]
                     },
                     lualine_x = {},
-                    lualine_y = { 'filetype', 'progress' },
+                    lualine_y = { 
+                        'filetype',
+                        { 'progress', padding = { left = 1, right = 0 } },
+                        { 'location', padding = { left = 0, right = 1 } },
+                    },
                     lualine_z = {
                         { 'encoding', separator = { right = '' }, left_padding = 2 },
                     },
