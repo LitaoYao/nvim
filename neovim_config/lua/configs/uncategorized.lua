@@ -139,6 +139,11 @@ bufferline.setup({
     }
 })
 
+vim.keymap.set('n', '<C-j>', ':BufferLineCyclePrev<CR>', { desc = 'Select previous buffer' });
+vim.keymap.set('n', '<C-k>', ':BufferLineCycleNext<CR>', { desc = 'Select next buffer' });
+vim.keymap.set('n', '<C-S-j>', ':BufferLineMovePrev<CR>', { desc = 'Move buffer left' });
+vim.keymap.set('n', '<C-S-k>', ':BufferLineMoveNext<CR>', { desc = 'Move buffer right' })
+
 -- Telescope
 local function normalize_path(path)
     return path:gsub('\\', '/')
@@ -196,15 +201,19 @@ local telescope = require('telescope').setup({
             n = {
                 ['dd'] = actions.delete_buffer,
             }
+        },
+        preview = {
+            treesitter = false,
         }
     }
 })
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>p', builtin.lsp_document_symbols, { desc = 'Telescope buffers' })
--- vim.keymap.set('n', '<leader>g', builtin.live_grep, { desc = 'Telescope live grep' })
--- vim.keymap.set('n', '<leader>h', builtin.help_tags, { desc = 'Telescope help tags' })
+vim.keymap.set('n', '<leader>p', builtin.lsp_document_symbols, { desc = 'Telescope lsp_document_symbols' })
+vim.keymap.set('n', '<leader>r', builtin.lsp_references, { desc = 'Telescope lsp references' })
+vim.keymap.set('n', '<leader>g', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>l', builtin.current_buffer_fuzzy_find, { desc = 'Telescope current buffer fuzzy find' })
 
 -- goto-preview
 local goto_preview = require('goto-preview')
@@ -212,45 +221,111 @@ goto_preview.setup({
     default_mappings = true
 })
 
--- nvim-treesitter
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or 'all' (the listed parsers MUST always be installed)
-  ensure_installed = { 'c', 'cpp', 'c_sharp', 'typescript', 'python', 'lua', 'vim', 'vimdoc', 'query', 'markdown', 'markdown_inline', 'bash', 'hlsl'},
+-- -- nvim-treesitter
+-- let nvim_treesitter = require ('nvim-treesitter')
+-- nvim_treesitter.setup {
+--   -- A list of parser names, or 'all' (the listed parsers MUST always be installed)
+--   ensure_installed = { 'c', 'cpp', 'c_sharp', 'typescript', 'python', 'lua', 'vim', 'vimdoc', 'query', 'markdown', 'markdown_inline', 'bash', 'hlsl'},
+-- 
+--   -- Install parsers synchronously (only applied to `ensure_installed`)
+--   sync_install = false,
+-- 
+--   -- Automatically install missing parsers when entering buffer
+--   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+--   auto_install = true,
+-- 
+--   -- List of parsers to ignore installing (or 'all')
+--   ignore_install = { 'javascript' },
+-- 
+--   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+--   -- parser_install_dir = '/some/path/to/store/parsers', -- Remember to run vim.opt.runtimepath:append('/some/path/to/store/parsers')!
+-- 
+--   highlight = {
+--     enable = true,
+-- 
+--     -- -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+--     -- -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+--     -- -- the name of the parser)
+--     -- -- list of language that will be disabled
+--     -- disable = { 'c', 'rust' },
+--     -- -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+--     -- disable = function(lang, buf)
+--     --     local max_filesize = 100 * 1024 -- 100 KB
+--     --     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+--     --     if ok and stats and stats.size > max_filesize then
+--     --         return true
+--     --     end
+--     -- end,
+-- 
+--     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+--     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+--     -- Using this option may slow down your editor, and you may see some duplicate highlights.
+--     -- Instead of true it can also be a list of languages
+--     additional_vim_regex_highlighting = false,
+--   },
+-- }
 
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
+-- nvim-ufo
+-- (Note: the `nvim-treesitter` plugin is *not* needed.)
+-- ufo uses the same query files for folding (queries/<lang>/folds.scm)
+-- performance and stability are better than `foldmethod=nvim_treesitter#foldexpr()`
+local ufo = require('ufo')
+ufo.setup({
+    open_fold_hl_timeout = 150,
+    close_fold_kinds_for_ft = {
+        default = {'imports', 'comment'},
+        json = {'array'},
+        c = {'comment', 'region'}
+    },
+    preview = {
+        win_config = {
+            border = {'', '─', '', '', '', '─', '', ''},
+            winhighlight = 'Normal:Folded',
+            winblend = 0
+        },
+        mappings = {
+            scrollU = '<C-u>',
+            scrollD = '<C-d>',
+            jumpTop = '[',
+            jumpBot = ']'
+        }
+    },
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end,
+    fold_virt_text_handler =  function(virtText, lnum, endLnum, width, truncate)
+        local newVirtText = {}
+        local suffix = (' 󰁂 %d '):format(endLnum - lnum)
+        local sufWidth = vim.fn.strdisplaywidth(suffix)
+        local targetWidth = width - sufWidth
+        local curWidth = 0
+        for _, chunk in ipairs(virtText) do
+            local chunkText = chunk[1]
+            local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            if targetWidth > curWidth + chunkWidth then
+                table.insert(newVirtText, chunk)
+            else
+                chunkText = truncate(chunkText, targetWidth - curWidth)
+                local hlGroup = chunk[2]
+                table.insert(newVirtText, {chunkText, hlGroup})
+                chunkWidth = vim.fn.strdisplaywidth(chunkText)
+                -- str width returned from truncate() may less than 2nd argument, need padding
+                if curWidth + chunkWidth < targetWidth then
+                    suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+                end
+                break
+            end
+            curWidth = curWidth + chunkWidth
+        end
+        table.insert(newVirtText, {suffix, 'MoreMsg'})
+        return newVirtText
+    end
+})
+ufo.disable()
+vim.keymap.set('n', '<leader>zo', ufo.openAllFolds)
+vim.keymap.set('n', '<leader>zc', ufo.closeAllFolds)
+vim.keymap.set('n', '<leader>zn', ufo.openFoldsExceptKinds)
+vim.keymap.set('n', '<leader>zm', ufo.closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
+vim.keymap.set('n', '<leader>zz', ufo.enable)
+vim.keymap.set('n', '<leader>zq', ufo.disable)
 
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  auto_install = true,
-
-  -- List of parsers to ignore installing (or 'all')
-  ignore_install = { 'javascript' },
-
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = '/some/path/to/store/parsers', -- Remember to run vim.opt.runtimepath:append('/some/path/to/store/parsers')!
-
-  highlight = {
-    enable = true,
-
-    -- -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- -- the name of the parser)
-    -- -- list of language that will be disabled
-    -- disable = { 'c', 'rust' },
-    -- -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-    -- disable = function(lang, buf)
-    --     local max_filesize = 100 * 1024 -- 100 KB
-    --     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-    --     if ok and stats and stats.size > max_filesize then
-    --         return true
-    --     end
-    -- end,
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}

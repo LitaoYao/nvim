@@ -1,9 +1,9 @@
 -- dap.lua
 
 -- mason-nvim-dap
-require('mason-nvim-dap').setup({
-  ensure_installed = { 'js' },  -- 自动安装js-debug-adapter
-})
+-- require('mason-nvim-dap').setup({
+--     ensure_installed = { 'js' },  -- 自动安装js-debug-adapter
+-- })
 
 -- require('dap-vscode-js').setup({
 --   -- node_path = 'node', -- Path of node executable. Defaults to $NODE_PATH, and then 'node'
@@ -34,59 +34,54 @@ local dap_utils = require('dap.utils')
 
 local workspace_folder = get_workspace_folder()
 
+-- dap.adapters['pwa-node'] = {
+--     type = 'server',
+--     host = 'localhost',
+--     port = '${port}',
+--     executable = {
+--         command =  vim.fn.stdpath('data') .. '/mason/bin/js-debug-adapter.cmd',
+--         args = {
+--             '${port}',
+--         },
+--     },
+-- }
+
 dap.adapters['pwa-node'] = {
     type = 'server',
-    host = '::1',
+    host = 'localhost',
     port = '${port}',
     executable = {
-        command =  vim.fn.stdpath('data') .. '/mason/bin/js-debug-adapter.cmd',
-        args = {
-            '${port}',
-        },
+        command =  'node',
+        args = { 'C:/Users/bobyao/AppData/Local/nvim-data/plugged/vscode-js-debug/out/src/vsDebugServer.js', '${port}' },
     },
 }
 
--- dap.configurations['javascript'] = {
---     {
---         type = 'pwa-node',
---         request = 'attach',
---         name = 'Attach to Untiy V8',
---         address = 'localhost',
---         port = 9229,
---         cwd = workspace_folder,
---         restart = true,
---         pauseForSourceMap = true,
---         resolveSourceMapLocations = nil,
---         sourceMapPathOverrides = {
---             ['InGamePath:JS/*'] = workspace_folder .. '/.babelbuild/*.map',
---             ['UGCPath:JS/*'] = workspace_folder .. '/.babelbuild/UGC/*.map',
---             ['webpack://@tencent/pixide-puerts-framework/*'] = workspace_folder .. '/packages/GameFramework/*',
---         },
---         timeout = 30000,
---         trace = true,
---     }
--- }
-
-dap.configurations['typescript'] = {
-    {
-        type = 'pwa-node',
-        request = 'attach',
-        name = 'Attach to Untiy V8',
-        address = 'localhost',
-        port = 9229,
-        cwd = workspace_folder,
-        restart = true,
-        pauseForSourceMap = true,
-        resolveSourceMapLocations = nil,
-        sourceMapPathOverrides = {
-            ['InGamePath:JS/*'] = '.babelbuild/*.map',
-            ['UGCPath:JS/*'] = '.babelbuild/UGC/*.map',
-            ['webpack://@tencent/pixide-puerts-framework/*'] = '${workspaceFolder}/packages/GameFramework/*',
-        },
-        timeout = 30000,
-        trace = true,
+for _, language in ipairs({ "typescript", "javascript" }) do
+    dap.configurations[language] = {
+        {
+            type = 'pwa-node',
+            request = 'attach',
+            name = 'Attach to PuerTS',
+            address = 'localhost',
+            port = 9229,
+            cwd = workspace_folder,
+            restart = true,
+            pauseForSourceMap = false,
+            resolveSourceMapLocations = nil,
+            sourceMapPathOverrides = {
+                ['InGamePath:JS/*'] = workspace_folder .. '/Build/.localbuild/SRC/Domestic/*.map',
+                ['rollup://@tencent/pixide-puerts-framework/*'] = workspace_folder .. '/BaseScripts/Shared/GameFramework/*',
+                ['rollup://@tencent/tv-websocket/*'] = workspace_folder .. '/BaseScripts/Domestic/TV/tv-websocket/*',
+                ['rollup://@tencent/tv-httprequest/*'] = workspace_folder .. '/BaseScripts/Domestic/TV/tv-httprequest/*',
+                ['rollup://@tencent/tv-player/*'] = workspace_folder .. '/BaseScripts/Domestic/TV/tv-player/*',
+                ['rollup://@tencent/tv-module/*'] = workspace_folder .. '/BaseScripts/Domestic/TV/tv-module/*',
+                ['rollup://@tencent/tga-puer/*'] = workspace_folder .. '/BaseScripts/Domestic/TV/tga-puer/*'
+            },
+            timeout = 30000,
+            trace = true,
+        }
     }
-}
+end
 
 -- dapui
 local dapui = require('dapui')

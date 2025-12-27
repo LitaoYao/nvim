@@ -1,0 +1,35 @@
+-- 快捷键设置 (保留原快捷键)
+vim.keymap.set('n', '<C-a>', 'ggVG')
+vim.keymap.set('n', '<C-s>', ':w<CR>')
+vim.keymap.set('v', '<C-c>', '"+y<CR>')
+vim.keymap.set({ 'i', 'c', 'x' }, '<C-v>', '<C-r>+')
+vim.keymap.set('n', '<C-Tab>', ':tabnext<CR>')
+vim.keymap.set('n', '<C-b>', ': !start %<CR>')
+vim.keymap.set('n', '<F8>', ':call RunDebug()<CR>')
+vim.keymap.set('n', '<F9>', ':call Compile()<CR>')
+vim.keymap.set('n', '<F10>', ':e %:p:h/input<CR>')
+vim.keymap.set('n', '<F11>', ':call RunProg()<CR>')
+vim.keymap.set('n', '<Home>', ':call SmartHome()<CR>')
+vim.keymap.set('i', '<Home>', '<C-r>=SmartHome()<CR>')
+vim.keymap.set('v', '<Home>', '<Esc>:call SmartHome()<CR>msgv`s')
+
+-- floaterm
+vim.keymap.set('n', '<leader>tt', ':FloatermToggle<CR>')
+vim.keymap.set('n', '<leader>tn', ':FloatermNew<CR>')
+vim.keymap.set('n', '<leader>tq', ':FloatermKill<CR>')
+vim.keymap.set('n', '<leader>tk', ':FloatermNext')
+vim.keymap.set('n', '<leader>tj', ':FloatermPrev')
+vim.keymap.set('t', '<leader>tt', '<C-\\><C-n>:FloatermToggle<CR>')
+vim.keymap.set('t', '<leader>tn', '<C-\\><C-n>:FloatermNew<CR>')
+vim.keymap.set('t', '<leader>tq', '<C-\\><C-n>:FloatermKill<CR>')
+vim.keymap.set('t', '<leader>tk', '<C-\\><C-n>:FloatermNext')
+vim.keymap.set('t', '<leader>tj', '<C-\\><C-n>:FloatermPrev')
+vim.keymap.set('t', '<leader><esc>', '<C-\\><C-n>')
+
+-- ctrlsf
+vim.keymap.set('n', '<C-S-F>', ':CtrlSF<space>')
+
+-- aerial
+vim.keymap.set('n', '<leader>a', ':AerialToggle!<CR>')
+vim.keymap.set('n', '{', ':AerialPrev<CR>')
+vim.keymap.set('n', '}', ':AerialNext<CR>')

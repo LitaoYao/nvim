@@ -19,7 +19,7 @@ endif
 
 " Disable GUI ScrollBar
 if exists(':GuiScrollBar')
-    GuiScrollBar 0
+    GuiScrollBar 1
 endif
 
 if exists(":GuiAdaptiveStyle")
@@ -34,8 +34,8 @@ if exists(":GuiAdaptiveFont")
     GuiAdaptiveFont 1
 endif
 
-call GuiWindowFullScreen(0)
-call GuiWindowFrameless(0)
+" call GuiWindowFullScreen(0)
+" call GuiWindowFrameless(0)
 
 " Right Click Context Menu (Copy-Cut-Paste)
 nnoremap <silent><RightMouse> :call GuiShowContextMenu()<CR>

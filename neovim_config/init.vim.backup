@@ -63,6 +63,11 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'onsails/lspkind-nvim'
 Plug 'nvim-lua/plenary.nvim'
 " ------------------------
+"  折叠插件
+Plug 'kevinhwang91/promise-async'
+Plug 'kevinhwang91/nvim-ufo'
+" ------------------------
+" ------------------------
 " 主题安装
 Plug 'folke/tokyonight.nvim'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
@@ -74,7 +79,9 @@ Plug 'pmizio/typescript-tools.nvim'
 " ------------------------
 " ------------------------
 " C#
-Plug 'seblj/roslyn.nvim'
+" Plug 'seblj/roslyn.nvim'
+Plug 'iabdelkareem/csharp.nvim'
+Plug 'Tastyep/structlog.nvim'
 " ------------------------
 " Plug 'nvim-tree/nvim-tree.lua'
 Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
@@ -90,9 +97,9 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
-Plug 'jay-babu/mason-nvim-dap.nvim'
+" Plug 'jay-babu/mason-nvim-dap.nvim'
 " Plug 'mxsdev/nvim-dap-vscode-js'
-" Plug 'microsoft/vscode-js-debug', {'do': 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out'}
+Plug 'microsoft/vscode-js-debug', {'do': 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out'}
 " ------------------------
 call plug#end()
 
@@ -125,7 +132,7 @@ if has("multi_byte")
 	" Uncomment to have 'bomb' on by default for new files.
 	" Note, this will not apply to the first, empty
 	" buffer created at Vim startup.
-	setglobal bomb
+    setglobal bomb
 	set fileencodings=ucs-bom,utf-8,gb2312,cp936,gbk,gb18030,big5,euc-jp,euc-kr,latin1
 endif
 
@@ -224,7 +231,7 @@ autocmd FileType python set shiftwidth=4
 autocmd FileType python set smarttab
 autocmd FileType python set noexpandtab
 
-autocmd FileType lua set expandtab
+autocmd FileType cpp set noexpandtab
 
 set re=0
 
@@ -389,11 +396,6 @@ set hidden
 set novisualbell
 
 let mapleader=","
-
-nmap <C-j> :bp<CR>
-imap <C-j> <C-r>:bp<CR>
-nmap <C-k> :bn<CR>
-imap <C-k> <C-r>:bn<CR>
 
 " -----------------------
 "  Shared Data设置

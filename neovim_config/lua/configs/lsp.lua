@@ -1,5 +1,8 @@
 -- lsp.lua
 
+-- vim.lsp.buf
+vim.keymap.set('n', '<F2>', ':lua vim.lsp.buf.rename()<CR>')
+
 -- diagnostic
 vim.diagnostic.config({
     virtual_text = false,
@@ -51,13 +54,13 @@ vim.keymap.set(
     }
 )
 
--- mason
-local mason = require('mason')
-mason.setup()
+-- -- mason
+-- local mason = require('mason')
+-- mason.setup()
 
--- mason_lspconfig
-local mason_lspconfig = require('mason-lspconfig')
-mason_lspconfig.setup({})
+-- -- mason_lspconfig
+-- local mason_lspconfig = require('mason-lspconfig')
+-- mason_lspconfig.setup({})
 
 -- lspkind
 local lspkind = require('lspkind')
@@ -138,15 +141,12 @@ cmp.event:on(
     cmp_autopairs.on_confirm_done()
 )
 
--- lspconfig
-local lspconfig = require('lspconfig')
-
 -- cmp_nvim_lsp
 local cmp_nvim_lsp = require('cmp_nvim_lsp')
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- python3
-lspconfig.pylsp.setup({
+vim.lsp.config('pylsp', {
     settings = {
         pylsp = {
             plugins = {
@@ -161,147 +161,141 @@ lspconfig.pylsp.setup({
 
 -- C#
 
--- roslyn
-local roslyn = require('roslyn')
-roslyn.setup({
-    config = {
-        -- Here you can pass in any options that that you would like to pass to `vim.lsp.start`.
-        -- Use `:h vim.lsp.ClientConfig` to see all possible options.
-        -- The only options that are overwritten and won't have any effect by setting here:
-        --     - `name`
-        --     - `cmd`
-        --     - `root_dir`
+-- csharp.nvim
+require('csharp').setup({
+    lsp = {
+        -- Sets if you want to use omnisharp as your LSP
+        omnisharp = {
+        -- When set to false, csharp.nvim won't launch omnisharp automatically.
+            enable = true,
+            -- When set, csharp.nvim won't install omnisharp automatically. Instead, the omnisharp instance in the cmd_path will be used.
+            cmd_path = nil,
+            -- The default timeout when communicating with omnisharp
+            default_timeout = 1000,
+            -- Settings that'll be passed to the omnisharp server
+            enable_editor_config_support = true,
+            organize_imports = true,
+            load_projects_on_demand = false,
+            enable_analyzers_support = true,
+            enable_import_completion = true,
+            include_prerelease_sdks = true,
+            analyze_open_documents_only = false,
+            enable_package_auto_restore = true,
+            -- Launches omnisharp in debug mode
+            debug = false,
+        },
+        -- Sets if you want to use roslyn as your LSP
+        roslyn = {
+            -- When set to true, csharp.nvim will launch roslyn automatically.
+            enable = false,
+            -- Path to the roslyn LSP see 'Roslyn LSP Specific Prerequisites' above.
+            cmd_path = nil,
+        },
+        -- The capabilities to pass to the omnisharp server
+        capabilities = nil,
+        -- on_attach function that'll be called when the LSP is attached to a buffer
+        on_attach = nil
     },
-
-    --[[
-    -- if you installed `roslyn-ls` by nix, use the following:
-    exe = 'Microsoft.CodeAnalysis.LanguageServer',
-    ]]
-    exe = {
-        'dotnet',
-        vim.fs.joinpath(vim.fn.stdpath('data'), 'roslyn', 'Microsoft.CodeAnalysis.LanguageServer.dll'),
+    logging = {
+        -- The minimum log level.
+        level = 'off',
     },
-    args = {
-        '--logLevel=Information', '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path())
-    },
-    --[[
-    -- args can be used to pass additional flags to the language server
-    ]]
-
-    -- 'auto' | 'roslyn' | 'off'
-    --
-    -- - 'auto': Does nothing for filewatching, leaving everything as default
-    -- - 'roslyn': Turns off neovim filewatching which will make roslyn do the filewatching
-    -- - 'off': Hack to turn off all filewatching. (Can be used if you notice performance issues)
-    filewatching = 'auto',
-
-    -- Optional function that takes an array of targets as the only argument. Return the target you
-    -- want to use. If it returns `nil`, then it falls back to guessing the target like normal
-    -- Example:
-    --
-    -- choose_target = function(target)
-    --     return vim.iter(target):find(function(item)
-    --         if string.match(item, 'Foo.sln') then
-    --             return item
-    --         end
-    --     end)
-    -- end
-    choose_target = nil,
-
-    -- Optional function that takes the selected target as the only argument.
-    -- Returns a boolean of whether it should be ignored to attach to or not
-    --
-    -- I am for example using this to disable a solution with a lot of .NET Framework code on mac
-    -- Example:
-    --
-    -- ignore_target = function(target)
-    --     return string.match(target, 'Foo.sln') ~= nil
-    -- end
-    ignore_target = nil,
-
-    -- Whether or not to look for solution files in the child of the (root).
-    -- Set this to true if you have some projects that are not a child of the
-    -- directory with the solution file
-    broad_search = false,
-
-    -- Whether or not to lock the solution target after the first attach.
-    -- This will always attach to the target in `vim.g.roslyn_nvim_selected_solution`.
-    -- NOTE: You can use `:Roslyn target` to change the target
-    lock_target = false,
+    dap = {
+        -- When set, csharp.nvim won't launch install and debugger automatically. Instead, it'll use the debug adapter specified.
+        --- @type string?
+        adapter_name = nil,
+    }
 })
 
+-- roslyn
+-- local roslyn = require('roslyn')
+-- roslyn.setup({
+--     config = {
+--         -- Here you can pass in any options that that you would like to pass to `vim.lsp.start`.
+--         -- Use `:h vim.lsp.ClientConfig` to see all possible options.
+--         -- The only options that are overwritten and won't have any effect by setting here:
+--         --     - `name`
+--         --     - `cmd`
+--         --     - `root_dir`
+--     },
+
+--     [>
+--     -- if you installed `roslyn-ls` by nix, use the following:
+--     exe = 'Microsoft.CodeAnalysis.LanguageServer',
+--     ]]
+--     exe = {
+--         'dotnet',
+--         vim.fs.joinpath(vim.fn.stdpath('data'), 'roslyn', 'Microsoft.CodeAnalysis.LanguageServer.dll'),
+--     },
+--     args = {
+--         '--logLevel=Information', '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path())
+--     },
+--     [>
+--     -- args can be used to pass additional flags to the language server
+--     ]]
+
+--     -- 'auto' | 'roslyn' | 'off'
+--     --
+--     -- - 'auto': Does nothing for filewatching, leaving everything as default
+--     -- - 'roslyn': Turns off neovim filewatching which will make roslyn do the filewatching
+--     -- - 'off': Hack to turn off all filewatching. (Can be used if you notice performance issues)
+--     filewatching = 'auto',
+
+--     -- Optional function that takes an array of targets as the only argument. Return the target you
+--     -- want to use. If it returns `nil`, then it falls back to guessing the target like normal
+--     -- Example:
+--     --
+--     -- choose_target = function(target)
+--     --     return vim.iter(target):find(function(item)
+--     --         if string.match(item, 'Foo.sln') then
+--     --             return item
+--     --         end
+--     --     end)
+--     -- end
+--     choose_target = nil,
+
+--     -- Optional function that takes the selected target as the only argument.
+--     -- Returns a boolean of whether it should be ignored to attach to or not
+--     --
+--     -- I am for example using this to disable a solution with a lot of .NET Framework code on mac
+--     -- Example:
+--     --
+--     -- ignore_target = function(target)
+--     --     return string.match(target, 'Foo.sln') ~= nil
+--     -- end
+--     ignore_target = nil,
+
+--     -- Whether or not to look for solution files in the child of the (root).
+--     -- Set this to true if you have some projects that are not a child of the
+--     -- directory with the solution file
+--     broad_search = false,
+
+--     -- Whether or not to lock the solution target after the first attach.
+--     -- This will always attach to the target in `vim.g.roslyn_nvim_selected_solution`.
+--     -- NOTE: You can use `:Roslyn target` to change the target
+--     lock_target = false,
+-- })
+
 -- -- csharp_ls
--- lspconfig.csharp_ls.setup{}
+-- vim.lsp.config('csharp_ls', {})
 
--- -- omnisharp
+-- omnisharp
 -- local pid = vim.fn.getpid()
--- local omnisharp_bin = 'C:/Program Files/OmniSharp/OmniSharp'
--- lspconfig.omnisharp.setup{
---     cmd = { omnisharp_bin, '--languageserver'},
---     on_attach = function(client, bufnr)
---         -- Enable completion triggered by <c-x><c-o>
---         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
---         -- Mappings.
---         -- See `:help vim.lsp.*` for documentation on any of the below functions
---         local opts = { noremap=true, silent=true }
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
---         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
---     end,
+-- local omnisharp_bin = 'C:/Program Files/OmniSharp/OmniSharp.exe'
+-- vim.lsp.config('omnisharp', {
+--     cmd = { omnisharp_bin, '--languageserver' },
 --     settings = {
---         FormattingOptions = {
---             -- Enables support for reading code style, naming convention and analyzer
---             -- settings from .editorconfig.
---             EnableEditorConfigSupport = true,
---             -- Specifies whether 'using' directives should be grouped and sorted during
---             -- document formatting.
---             OrganizeImports = nil,
---         },
 --         MsBuild = {
---             -- If true, MSBuild project system will only load projects for files that
---             -- were opened in the editor. This setting is useful for big C# codebases
---             -- and allows for faster initialization of code navigation features only
---             -- for projects that are relevant to code that is being edited. With this
---             -- setting enabled OmniSharp may load fewer projects and may thus display
---             -- incomplete reference lists for symbols.
---             LoadProjectsOnDemand = nil,
+--             LoadProjectsOnDemand = true, -- 按需加载项目
 --         },
---         RoslynExtensionsOptions = {
---             -- Enables support for roslyn analyzers, code fixes and rulesets.
---             EnableAnalyzersSupport = nil,
---             -- Enables support for showing unimported types and unimported extension
---             -- methods in completion lists. When committed, the appropriate using
---             -- directive will be added at the top of the current file. This option can
---             -- have a negative impact on initial completion responsiveness,
---             -- particularly for the first few completion sessions after opening a
---             -- solution.
---             EnableImportCompletion = nil,
---             -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
---             -- true
---             AnalyzeOpenDocumentsOnly = nil,
---         },
---         Sdk = {
---             -- Specifies whether to include preview versions of the .NET SDK when
---             -- determining which version to use for project loading.
---             IncludePrereleases = true,
---         },
---         capabilities = capabilities
+--         RoslynExtension = {
+--             EnableRoslynAnalyzers = true, -- 启用高级代码分析
+--         }
 --     },
 -- }
 
 -- C++
-lspconfig.clangd.setup{}
+vim.lsp.config('clangd', {})
 
 -- TypeScript
 local typescript_tools = require('typescript-tools')
@@ -367,7 +361,7 @@ typescript_tools.setup{
 }
 
 -- eslint
-lspconfig.eslint.setup({
+vim.lsp.config('eslint', {
     optional = true,
     settings = {
         workingDirectory = {
