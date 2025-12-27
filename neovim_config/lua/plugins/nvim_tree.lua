@@ -16,4 +16,5 @@ return {
             { '<leader>e', function() vim.cmd('NvimTreeToggle %:p:h') end, desc = 'Find File in Nvim-Tree' },
         },
     },
+    { 'nvim-tree/nvim-web-devicons' },
 }
