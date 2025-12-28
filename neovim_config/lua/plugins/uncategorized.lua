@@ -15,6 +15,6 @@ return {
     { 'rcarriga/nvim-dap-ui' },
     { 'microsoft/vscode-js-debug', build = 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out' },
     { 'voldikss/vim-translator' },
-    { 'mhinz/vim-startify' },
+    -- { 'mhinz/vim-startify' },
     { 'nvim-tree/nvim-web-devicons' },
 }
